@@ -90,6 +90,234 @@ PHP_WINUTIL_API BOOL php_win32_console_fileno_set_vt100(zend_long fileno, BOOL e
 	return result;
 }/*}}}*/
 
+PHP_WINUTIL_API BOOL php_win32_console_fileno_has_vt100_input(zend_long fileno)
+{/*{{{*/
+	BOOL result = FALSE;
+	HANDLE handle = (HANDLE)_get_osfhandle(fileno);
+
+	if (handle != INVALID_HANDLE_VALUE) {
+		DWORD events;
+
+		if (GetNumberOfConsoleInputEvents(handle, &events)) {
+			// Is STDIN
+			DWORD mode;
+
+			if (GetConsoleMode(handle, &mode)) {
+				if (mode & ENABLE_VIRTUAL_TERMINAL_INPUT) {
+					result = TRUE;
+				}
+			}
+		}
+	}
+	return result;
+}/*}}}*/
+
+PHP_WINUTIL_API BOOL php_win32_console_fileno_set_vt100_input(zend_long fileno, BOOL enable)
+{/*{{{*/
+	BOOL result = FALSE;
+	HANDLE handle = (HANDLE)_get_osfhandle(fileno);
+
+	if (handle != INVALID_HANDLE_VALUE) {
+		DWORD events;
+
+		if (GetNumberOfConsoleInputEvents(handle, &events)) {
+			// Is STDIN
+			DWORD mode;
+
+			if (GetConsoleMode(handle, &mode)) {
+				DWORD newMode;
+
+				if (enable) {
+					newMode = mode | ENABLE_VIRTUAL_TERMINAL_INPUT;
+				}
+				else {
+					newMode = mode & ~ENABLE_VIRTUAL_TERMINAL_INPUT;
+				}
+				if (newMode == mode) {
+					result = TRUE;
+				}
+				else {
+					if (SetConsoleMode(handle, newMode)) {
+						result = TRUE;
+					}
+				}
+			}
+		}
+	}
+	return result;
+}/*}}}*/
+
+PHP_WINUTIL_API BOOL php_win32_console_fileno_has_echo_input(zend_long fileno)
+{/*{{{*/
+	BOOL result = FALSE;
+	HANDLE handle = (HANDLE)_get_osfhandle(fileno);
+
+	if (handle != INVALID_HANDLE_VALUE) {
+		DWORD events;
+
+		if (GetNumberOfConsoleInputEvents(handle, &events)) {
+			// Is STDIN
+			DWORD mode;
+
+			if (GetConsoleMode(handle, &mode)) {
+				if (mode & ENABLE_ECHO_INPUT) {
+					result = TRUE;
+				}
+			}
+		}
+	}
+	return result;
+}/*}}}*/
+
+PHP_WINUTIL_API BOOL php_win32_console_fileno_set_echo_input(zend_long fileno, BOOL enable)
+{/*{{{*/
+	BOOL result = FALSE;
+	HANDLE handle = (HANDLE)_get_osfhandle(fileno);
+
+	if (handle != INVALID_HANDLE_VALUE) {
+		DWORD events;
+
+		if (GetNumberOfConsoleInputEvents(handle, &events)) {
+			// Is STDIN
+			DWORD mode;
+
+			if (GetConsoleMode(handle, &mode)) {
+				DWORD newMode;
+
+				if (enable) {
+					newMode = mode | ENABLE_ECHO_INPUT;
+				}
+				else {
+					newMode = mode & ~ENABLE_ECHO_INPUT;
+				}
+				if (newMode == mode) {
+					result = TRUE;
+				}
+				else {
+					if (SetConsoleMode(handle, newMode)) {
+						result = TRUE;
+					}
+				}
+			}
+		}
+	}
+	return result;
+}/*}}}*/
+
+PHP_WINUTIL_API BOOL php_win32_console_fileno_has_processed_input(zend_long fileno)
+{/*{{{*/
+	BOOL result = FALSE;
+	HANDLE handle = (HANDLE)_get_osfhandle(fileno);
+
+	if (handle != INVALID_HANDLE_VALUE) {
+		DWORD events;
+
+		if (GetNumberOfConsoleInputEvents(handle, &events)) {
+			// Is STDIN
+			DWORD mode;
+
+			if (GetConsoleMode(handle, &mode)) {
+				if (mode & ENABLE_PROCESSED_INPUT) {
+					result = TRUE;
+				}
+			}
+		}
+	}
+	return result;
+}/*}}}*/
+
+PHP_WINUTIL_API BOOL php_win32_console_fileno_set_processed_input(zend_long fileno, BOOL enable)
+{/*{{{*/
+	BOOL result = FALSE;
+	HANDLE handle = (HANDLE)_get_osfhandle(fileno);
+
+	if (handle != INVALID_HANDLE_VALUE) {
+		DWORD events;
+
+		if (GetNumberOfConsoleInputEvents(handle, &events)) {
+			// Is STDIN
+			DWORD mode;
+
+			if (GetConsoleMode(handle, &mode)) {
+				DWORD newMode;
+
+				if (enable) {
+					newMode = mode | ENABLE_PROCESSED_INPUT;
+				}
+				else {
+					newMode = mode & ~ENABLE_PROCESSED_INPUT;
+				}
+				if (newMode == mode) {
+					result = TRUE;
+				}
+				else {
+					if (SetConsoleMode(handle, newMode)) {
+						result = TRUE;
+					}
+				}
+			}
+		}
+	}
+	return result;
+}/*}}}*/
+
+PHP_WINUTIL_API BOOL php_win32_console_fileno_has_line_input(zend_long fileno)
+{/*{{{*/
+	BOOL result = FALSE;
+	HANDLE handle = (HANDLE)_get_osfhandle(fileno);
+
+	if (handle != INVALID_HANDLE_VALUE) {
+		DWORD events;
+
+		if (GetNumberOfConsoleInputEvents(handle, &events)) {
+			// Is STDIN
+			DWORD mode;
+
+			if (GetConsoleMode(handle, &mode)) {
+				if (mode & ENABLE_LINE_INPUT) {
+					result = TRUE;
+				}
+			}
+		}
+	}
+	return result;
+}/*}}}*/
+
+PHP_WINUTIL_API BOOL php_win32_console_fileno_set_line_input(zend_long fileno, BOOL enable)
+{/*{{{*/
+	BOOL result = FALSE;
+	HANDLE handle = (HANDLE)_get_osfhandle(fileno);
+
+	if (handle != INVALID_HANDLE_VALUE) {
+		DWORD events;
+
+		if (GetNumberOfConsoleInputEvents(handle, &events)) {
+			// Is STDIN
+			DWORD mode;
+
+			if (GetConsoleMode(handle, &mode)) {
+				DWORD newMode;
+
+				if (enable) {
+					newMode = mode | ENABLE_LINE_INPUT;
+				}
+				else {
+					newMode = mode & ~ENABLE_LINE_INPUT;
+				}
+				if (newMode == mode) {
+					result = TRUE;
+				}
+				else {
+					if (SetConsoleMode(handle, newMode)) {
+						result = TRUE;
+					}
+				}
+			}
+		}
+	}
+	return result;
+}/*}}}*/
+
 PHP_WINUTIL_API BOOL php_win32_console_is_own(void)
 {/*{{{*/
 	if (!IsDebuggerPresent()) {

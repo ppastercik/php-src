@@ -1755,6 +1755,262 @@ PHP_FUNCTION(sapi_windows_vt100_support)
 }
 #endif
 
+#ifdef PHP_WIN32
+/* {{{ Get or set VT100 input support for the specified stream associated to an
+   input buffer of a Windows console.
+*/
+PHP_FUNCTION(sapi_windows_vt100_input_support)
+{
+	zval* zsrc;
+	php_stream* stream;
+	bool enable, enable_is_null = 1;
+	zend_long fileno;
+
+	ZEND_PARSE_PARAMETERS_START(1, 2)
+		Z_PARAM_RESOURCE(zsrc)
+		Z_PARAM_OPTIONAL
+		Z_PARAM_BOOL_OR_NULL(enable, enable_is_null)
+		ZEND_PARSE_PARAMETERS_END();
+
+	php_stream_from_zval(stream, zsrc);
+
+	/* get the fd.
+	 * NB: Most other code will NOT use the PHP_STREAM_CAST_INTERNAL flag when casting.
+	 * It is only used here so that the buffered data warning is not displayed.
+	 */
+	if (php_stream_can_cast(stream, PHP_STREAM_AS_FD_FOR_SELECT | PHP_STREAM_CAST_INTERNAL) == SUCCESS) {
+		php_stream_cast(stream, PHP_STREAM_AS_FD_FOR_SELECT | PHP_STREAM_CAST_INTERNAL, (void*)&fileno, 0);
+	} else if (php_stream_can_cast(stream, PHP_STREAM_AS_FD | PHP_STREAM_CAST_INTERNAL) == SUCCESS) {
+		php_stream_cast(stream, PHP_STREAM_AS_FD | PHP_STREAM_CAST_INTERNAL, (void*)&fileno, 0);
+	} else {
+		if (!enable_is_null) {
+			php_error_docref(
+				NULL,
+				E_WARNING,
+				"not able to analyze the specified stream"
+			);
+		}
+		RETURN_FALSE;
+	}
+
+	/* Check if the file descriptor is a console */
+	if (!php_win32_console_fileno_is_console(fileno)) {
+		RETURN_FALSE;
+	}
+
+	if (enable_is_null) {
+		/* Check if the Windows standard handle has VT100 input control codes enabled */
+		if (php_win32_console_fileno_has_vt100_input(fileno)) {
+			RETURN_TRUE;
+		}
+		else {
+			RETURN_FALSE;
+		}
+	}
+	else {
+		/* Enable/disable VT100 input control codes support for the specified Windows standard handle */
+		if (php_win32_console_fileno_set_vt100_input(fileno, enable ? TRUE : FALSE)) {
+			RETURN_TRUE;
+		}
+		else {
+			RETURN_FALSE;
+		}
+	}
+}
+#endif
+
+#ifdef PHP_WIN32
+/* {{{ Get or set echo input support for the specified stream associated to an
+   input buffer of a Windows console.
+*/
+PHP_FUNCTION(sapi_windows_echo_input_support)
+{
+	zval* zsrc;
+	php_stream* stream;
+	bool enable, enable_is_null = 1;
+	zend_long fileno;
+
+	ZEND_PARSE_PARAMETERS_START(1, 2)
+		Z_PARAM_RESOURCE(zsrc)
+		Z_PARAM_OPTIONAL
+		Z_PARAM_BOOL_OR_NULL(enable, enable_is_null)
+		ZEND_PARSE_PARAMETERS_END();
+
+	php_stream_from_zval(stream, zsrc);
+
+	/* get the fd.
+	 * NB: Most other code will NOT use the PHP_STREAM_CAST_INTERNAL flag when casting.
+	 * It is only used here so that the buffered data warning is not displayed.
+	 */
+	if (php_stream_can_cast(stream, PHP_STREAM_AS_FD_FOR_SELECT | PHP_STREAM_CAST_INTERNAL) == SUCCESS) {
+		php_stream_cast(stream, PHP_STREAM_AS_FD_FOR_SELECT | PHP_STREAM_CAST_INTERNAL, (void*)&fileno, 0);
+	} else if (php_stream_can_cast(stream, PHP_STREAM_AS_FD | PHP_STREAM_CAST_INTERNAL) == SUCCESS) {
+		php_stream_cast(stream, PHP_STREAM_AS_FD | PHP_STREAM_CAST_INTERNAL, (void*)&fileno, 0);
+	} else {
+		if (!enable_is_null) {
+			php_error_docref(
+				NULL,
+				E_WARNING,
+				"not able to analyze the specified stream"
+			);
+		}
+		RETURN_FALSE;
+	}
+
+	/* Check if the file descriptor is a console */
+	if (!php_win32_console_fileno_is_console(fileno)) {
+		RETURN_FALSE;
+	}
+
+	if (enable_is_null) {
+		/* Check if the Windows standard handle has echo input enabled */
+		if (php_win32_console_fileno_has_echo_input(fileno)) {
+			RETURN_TRUE;
+		}
+		else {
+			RETURN_FALSE;
+		}
+	}
+	else {
+		/* Enable/disable echo input support for the specified Windows standard handle */
+		if (php_win32_console_fileno_set_echo_input(fileno, enable ? TRUE : FALSE)) {
+			RETURN_TRUE;
+		}
+		else {
+			RETURN_FALSE;
+		}
+	}
+}
+#endif
+
+#ifdef PHP_WIN32
+/* {{{ Get or set processed input support for the specified stream associated to an
+   input buffer of a Windows console.
+*/
+PHP_FUNCTION(sapi_windows_processed_input_support)
+{
+	zval* zsrc;
+	php_stream* stream;
+	bool enable, enable_is_null = 1;
+	zend_long fileno;
+
+	ZEND_PARSE_PARAMETERS_START(1, 2)
+		Z_PARAM_RESOURCE(zsrc)
+		Z_PARAM_OPTIONAL
+		Z_PARAM_BOOL_OR_NULL(enable, enable_is_null)
+		ZEND_PARSE_PARAMETERS_END();
+
+	php_stream_from_zval(stream, zsrc);
+
+	/* get the fd.
+	 * NB: Most other code will NOT use the PHP_STREAM_CAST_INTERNAL flag when casting.
+	 * It is only used here so that the buffered data warning is not displayed.
+	 */
+	if (php_stream_can_cast(stream, PHP_STREAM_AS_FD_FOR_SELECT | PHP_STREAM_CAST_INTERNAL) == SUCCESS) {
+		php_stream_cast(stream, PHP_STREAM_AS_FD_FOR_SELECT | PHP_STREAM_CAST_INTERNAL, (void*)&fileno, 0);
+	} else if (php_stream_can_cast(stream, PHP_STREAM_AS_FD | PHP_STREAM_CAST_INTERNAL) == SUCCESS) {
+		php_stream_cast(stream, PHP_STREAM_AS_FD | PHP_STREAM_CAST_INTERNAL, (void*)&fileno, 0);
+	} else {
+		if (!enable_is_null) {
+			php_error_docref(
+				NULL,
+				E_WARNING,
+				"not able to analyze the specified stream"
+			);
+		}
+		RETURN_FALSE;
+	}
+
+	/* Check if the file descriptor is a console */
+	if (!php_win32_console_fileno_is_console(fileno)) {
+		RETURN_FALSE;
+	}
+
+	if (enable_is_null) {
+		/* Check if the Windows standard handle has processed input enabled */
+		if (php_win32_console_fileno_has_processed_input(fileno)) {
+			RETURN_TRUE;
+		}
+		else {
+			RETURN_FALSE;
+		}
+	}
+	else {
+		/* Enable/disable processed input support for the specified Windows standard handle */
+		if (php_win32_console_fileno_set_processed_input(fileno, enable ? TRUE : FALSE)) {
+			RETURN_TRUE;
+		}
+		else {
+			RETURN_FALSE;
+		}
+	}
+}
+#endif
+
+#ifdef PHP_WIN32
+/* {{{ Get or set line input support for the specified stream associated to an
+   input buffer of a Windows console.
+*/
+PHP_FUNCTION(sapi_windows_line_input_support)
+{
+	zval* zsrc;
+	php_stream* stream;
+	bool enable, enable_is_null = 1;
+	zend_long fileno;
+
+	ZEND_PARSE_PARAMETERS_START(1, 2)
+		Z_PARAM_RESOURCE(zsrc)
+		Z_PARAM_OPTIONAL
+		Z_PARAM_BOOL_OR_NULL(enable, enable_is_null)
+		ZEND_PARSE_PARAMETERS_END();
+
+	php_stream_from_zval(stream, zsrc);
+
+	/* get the fd.
+	 * NB: Most other code will NOT use the PHP_STREAM_CAST_INTERNAL flag when casting.
+	 * It is only used here so that the buffered data warning is not displayed.
+	 */
+	if (php_stream_can_cast(stream, PHP_STREAM_AS_FD_FOR_SELECT | PHP_STREAM_CAST_INTERNAL) == SUCCESS) {
+		php_stream_cast(stream, PHP_STREAM_AS_FD_FOR_SELECT | PHP_STREAM_CAST_INTERNAL, (void*)&fileno, 0);
+	} else if (php_stream_can_cast(stream, PHP_STREAM_AS_FD | PHP_STREAM_CAST_INTERNAL) == SUCCESS) {
+		php_stream_cast(stream, PHP_STREAM_AS_FD | PHP_STREAM_CAST_INTERNAL, (void*)&fileno, 0);
+	} else {
+		if (!enable_is_null) {
+			php_error_docref(
+				NULL,
+				E_WARNING,
+				"not able to analyze the specified stream"
+			);
+		}
+		RETURN_FALSE;
+	}
+
+	/* Check if the file descriptor is a console */
+	if (!php_win32_console_fileno_is_console(fileno)) {
+		RETURN_FALSE;
+	}
+
+	if (enable_is_null) {
+		/* Check if the Windows standard handle has line input enabled */
+		if (php_win32_console_fileno_has_line_input(fileno)) {
+			RETURN_TRUE;
+		}
+		else {
+			RETURN_FALSE;
+		}
+	}
+	else {
+		/* Enable/disable line input support for the specified Windows standard handle */
+		if (php_win32_console_fileno_set_line_input(fileno, enable ? TRUE : FALSE)) {
+			RETURN_TRUE;
+		}
+		else {
+			RETURN_FALSE;
+		}
+	}
+}
+#endif
+
 #ifdef HAVE_SHUTDOWN
 /* {{{ causes all or part of a full-duplex connection on the socket associated
 	with stream to be shut down.  If how is SHUT_RD,  further receptions will

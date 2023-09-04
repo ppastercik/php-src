@@ -33,6 +33,10 @@
 #define ENABLE_VIRTUAL_TERMINAL_PROCESSING 0x0004
 #endif
 
+#ifndef ENABLE_VIRTUAL_TERMINAL_INPUT 
+#define ENABLE_VIRTUAL_TERMINAL_INPUT  0x0200
+#endif
+
 
 /*
 Check if a file descriptor associated to a stream is a console
@@ -51,6 +55,54 @@ Set/unset the ENABLE_VIRTUAL_TERMINAL_PROCESSING flag for the screen buffer (STD
 associated to a file descriptor
 */
 PHP_WINUTIL_API BOOL php_win32_console_fileno_set_vt100(zend_long fileno, BOOL enable);
+
+/*
+Check if the console attached to a file descriptor (input buffer, only STDIN)
+has the ENABLE_VIRTUAL_TERMINAL_INPUT flag set
+*/
+PHP_WINUTIL_API BOOL php_win32_console_fileno_has_vt100_input(zend_long fileno);
+
+/*
+Set/unset the ENABLE_VIRTUAL_TERMINAL_INPUT flag for the input buffer (STDIN)
+associated to a file descriptor
+*/
+PHP_WINUTIL_API BOOL php_win32_console_fileno_set_vt100_input(zend_long fileno, BOOL enable);
+
+/*
+Check if the console attached to a file descriptor (input buffer, only STDIN)
+has the ENABLE_ECHO_INPUT flag set
+*/
+PHP_WINUTIL_API BOOL php_win32_console_fileno_has_echo_input(zend_long fileno);
+
+/*
+Set/unset the ENABLE_ECHO_INPUT flag for the input buffer (STDIN)
+associated to a file descriptor
+*/
+PHP_WINUTIL_API BOOL php_win32_console_fileno_set_echo_input(zend_long fileno, BOOL enable);
+
+/*
+Check if the console attached to a file descriptor (input buffer, only STDIN)
+has the ENABLE_PROCESSED_INPUT flag set
+*/
+PHP_WINUTIL_API BOOL php_win32_console_fileno_has_processed_input(zend_long fileno);
+
+/*
+Set/unset the ENABLE_PROCESSED_INPUT flag for the input buffer (STDIN)
+associated to a file descriptor
+*/
+PHP_WINUTIL_API BOOL php_win32_console_fileno_set_processed_input(zend_long fileno, BOOL enable);
+
+/*
+Check if the console attached to a file descriptor (input buffer, only STDIN)
+has the ENABLE_LINE_INPUT flag set
+*/
+PHP_WINUTIL_API BOOL php_win32_console_fileno_has_line_input(zend_long fileno);
+
+/*
+Set/unset the ENABLE_LINE_INPUT flag for the input buffer (STDIN)
+associated to a file descriptor
+*/
+PHP_WINUTIL_API BOOL php_win32_console_fileno_set_line_input(zend_long fileno, BOOL enable);
 
 /* Check, whether the program has its own console. If a process was launched
 	through a GUI, it will have it's own console. For more info see
